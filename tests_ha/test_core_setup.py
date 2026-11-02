@@ -18,8 +18,10 @@ from custom_components.inim_prime.client import (
     Local6004Config,
     Local6004Error,
     Local6004Structure,
+    NativeZoneDef,
 )
 from custom_components.inim_prime.const import (
+    CONF_GROUP_BY_ROOM,
     CONF_LOCAL_PASSWORD,
     CONF_WEBHOOK_ENABLED,
     CONF_WEBHOOK_ID,
@@ -54,6 +56,41 @@ async def test_setup_loads_and_unload_closes_the_client(
     await hass.async_block_till_done()
     assert mock_config_entry.state is ConfigEntryState.NOT_LOADED
     patch_client.async_close.assert_awaited()
+
+
+async def test_setup_removes_the_room_devices_left_empty(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+    patch_client: AsyncMock,
+    mock_local_config: Local6004Config,
+) -> None:
+    """A room device stays while it holds zones, and goes once grouping is off."""
+    structure = mock_local_config.structure
+    assert structure is not None
+    patch_client.async_read_config.return_value = replace(
+        mock_local_config,
+        structure=replace(structure, zones=[NativeZoneDef(1, "Kitchen window", 1, (1,))]),
+    )
+    devices = dr.async_get(hass)
+    entities = er.async_get(hass)
+    room = (DOMAIN, f"{mock_config_entry.entry_id}_room_kitchen")
+    panel = (DOMAIN, mock_config_entry.entry_id)
+
+    assert await _setup(hass, mock_config_entry)
+    assert devices.async_get_device(identifiers={room}) is not None
+
+    hass.config_entries.async_update_entry(mock_config_entry, options={CONF_GROUP_BY_ROOM: False})
+    assert await hass.config_entries.async_reload(mock_config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert devices.async_get_device(identifiers={room}) is None
+    zone_id = entities.async_get_entity_id(
+        "binary_sensor", DOMAIN, f"{mock_config_entry.entry_id}_zone_1"
+    )
+    assert zone_id is not None
+    panel_device = devices.async_get_device(identifiers={panel})
+    assert panel_device is not None
+    assert entities.async_get(zone_id).device_id == panel_device.id
 
 
 async def test_setup_without_password_fails(
