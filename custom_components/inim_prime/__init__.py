@@ -26,6 +26,7 @@ from .coordinator import (
     InimDataUpdateCoordinator,
     InimRuntimeData,
 )
+from .device import async_remove_empty_room_devices
 from .event_log import async_register_event_log_service
 from .forced_arm import async_register_services
 from .webhook import async_register_webhook, async_unregister_webhook
@@ -71,6 +72,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: InimConfigEntry) -> bool
     _async_remove_legacy_entities(hass, entry)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    # Every entity now sits on its device, so a room device left without any
+    # (grouping turned off, a zone renamed) can go.
+    async_remove_empty_room_devices(hass, entry)
     return True
 
 
