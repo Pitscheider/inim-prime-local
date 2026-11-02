@@ -1,7 +1,5 @@
 """A "Non escludibile" zone gets no bypass switch (switch.py)."""
 
-from __future__ import annotations
-
 from dataclasses import replace
 from unittest.mock import AsyncMock
 

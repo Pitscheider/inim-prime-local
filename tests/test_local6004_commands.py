@@ -5,8 +5,6 @@ inim-prime-native (``assemble_payload`` of each operation), so they pin this
 client to the layouts documented there.
 """
 
-from __future__ import annotations
-
 import asyncio
 import subprocess
 import sys

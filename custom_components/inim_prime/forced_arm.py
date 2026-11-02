@@ -23,11 +23,9 @@ Safety model:
   partial arming, interior zones are left out), read live natively.
 """
 
-from __future__ import annotations
-
 from typing import Any
 
-import voluptuous as vol
+import probatio
 from homeassistant.const import ATTR_ENTITY_ID
 from homeassistant.core import (
     HomeAssistant,
@@ -63,12 +61,12 @@ _MODE_TO_ARM: dict[str, ArmMode] = {
     "night": ArmMode.SNAPSHOT,
 }
 
-ARM_FORCED_SCHEMA = vol.Schema(
+ARM_FORCED_SCHEMA = probatio.Schema(
     {
-        vol.Required(ATTR_ENTITY_ID): cv.entity_ids,
-        vol.Optional(ATTR_MODE): vol.In(list(_MODE_TO_ARM)),
-        vol.Optional(ATTR_SCENARIO): cv.string,
-        vol.Optional(ATTR_ALLOW_PARTIAL, default=False): cv.boolean,
+        probatio.Required(ATTR_ENTITY_ID): cv.entity_ids,
+        probatio.Optional(ATTR_MODE): probatio.In(list(_MODE_TO_ARM)),
+        probatio.Optional(ATTR_SCENARIO): cv.string,
+        probatio.Optional(ATTR_ALLOW_PARTIAL, default=False): cv.boolean,
     }
 )
 

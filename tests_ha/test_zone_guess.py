@@ -1,9 +1,7 @@
 """Tests for the multilingual zone-label device-class guesser."""
 
-from __future__ import annotations
-
 import pytest
-from homeassistant.components.binary_sensor import BinarySensorDeviceClass
+from homeassistant.components.binary_sensor.const import BinarySensorDeviceClass
 
 from custom_components.inim_prime.zone_guess import (
     _CLASS,

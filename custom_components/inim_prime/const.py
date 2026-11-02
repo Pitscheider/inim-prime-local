@@ -1,7 +1,5 @@
 """Constants for the INIM Prime integration."""
 
-from __future__ import annotations
-
 import logging
 import re
 from typing import Final

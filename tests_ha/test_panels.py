@@ -1,7 +1,5 @@
 """Tests for the name-agnostic multi-area panel logic (panels.py)."""
 
-from __future__ import annotations
-
 import pytest
 from homeassistant.components.alarm_control_panel import AlarmControlPanelState
 

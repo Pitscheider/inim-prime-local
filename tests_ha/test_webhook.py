@@ -1,7 +1,5 @@
 """Tests for the INIM Prime local realtime webhook and the optimistic patch."""
 
-from __future__ import annotations
-
 from unittest.mock import AsyncMock
 
 import pytest

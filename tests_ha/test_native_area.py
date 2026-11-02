@@ -1,7 +1,5 @@
 """Tests for the live area and zone state read natively (TCP 6004)."""
 
-from __future__ import annotations
-
 from unittest.mock import AsyncMock
 
 import pytest

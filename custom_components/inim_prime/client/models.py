@@ -1,7 +1,5 @@
 """Typed dataclasses for the panel state the integration exposes. No I/O."""
 
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 
 from .const import AreaMode, AreaState, ZoneState

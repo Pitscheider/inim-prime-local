@@ -31,9 +31,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Home Assistant 2026.x requires Python >=3.13.2 (homeassistant
-        # Requires-Python), so 3.13 is the floor; 3.14 is not yet supported.
-        python-version: ["3.13"]
+        # Follow the Python that Home Assistant requires (Requires-Python
+        # >=3.14.2 since 2026.3), so the tests run against the current release.
+        python-version: ["3.14"]
     env:
       PYTHONPATH: ${{ github.workspace }}
     steps:
@@ -48,7 +48,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install homeassistant pytest-homeassistant-custom-component \
                       pytest pytest-asyncio pytest-cov aiohttp python-dotenv \
-                      "ruff==0.15.19" "mypy==2.1.0"
+                      "ruff==0.16.9" "mypy==2.1.0"
       - name: Lint
         run: ruff check custom_components
       - name: Type check (strict)

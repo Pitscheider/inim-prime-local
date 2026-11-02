@@ -15,8 +15,6 @@ running coordinator's structure to drive the platforms' listeners and assert:
 * no duplicate entities appear after several coordinator updates.
 """
 
-from __future__ import annotations
-
 from dataclasses import replace
 from unittest.mock import AsyncMock
 

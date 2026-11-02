@@ -8,11 +8,9 @@ service response. Nothing is stored in Home Assistant — a card or script calls
 this when it wants the history.
 """
 
-from __future__ import annotations
-
 from typing import Any
 
-import voluptuous as vol
+import probatio
 from homeassistant.const import ATTR_ENTITY_ID
 from homeassistant.core import (
     HomeAssistant,
@@ -31,10 +29,10 @@ from .coordinator import InimConfigEntry
 SERVICE_GET_EVENT_LOG = "get_event_log"
 ATTR_LIMIT = "limit"
 
-GET_EVENT_LOG_SCHEMA = vol.Schema(
+GET_EVENT_LOG_SCHEMA = probatio.Schema(
     {
-        vol.Required(ATTR_ENTITY_ID): cv.entity_ids,
-        vol.Optional(ATTR_LIMIT, default=100): vol.All(int, vol.Range(min=0)),
+        probatio.Required(ATTR_ENTITY_ID): cv.entity_ids,
+        probatio.Optional(ATTR_LIMIT, default=100): probatio.All(int, probatio.Range(min=0)),
     }
 )
 

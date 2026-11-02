@@ -4,8 +4,6 @@ Exposes one switch per panel output (relay control) and one bypass switch per
 zone (zone exclusion), except for zones programmed "Non escludibile".
 """
 
-from __future__ import annotations
-
 from typing import Any
 
 from homeassistant.components.switch import SwitchEntity

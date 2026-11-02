@@ -14,8 +14,6 @@ validate the event name and cap the body size, and always answer ``200`` even
 on reject so we never leak which ids/params are valid.
 """
 
-from __future__ import annotations
-
 from collections.abc import Awaitable, Callable, Mapping
 from typing import TYPE_CHECKING
 

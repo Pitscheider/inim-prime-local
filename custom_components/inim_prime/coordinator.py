@@ -1,7 +1,5 @@
 """DataUpdateCoordinator for the INIM Prime integration (native TCP 6004 only)."""
 
-from __future__ import annotations
-
 import asyncio
 import time
 from dataclasses import dataclass, replace
@@ -470,10 +468,15 @@ class InimDataUpdateCoordinator(DataUpdateCoordinator[InimData]):
 
 @dataclass
 class InimRuntimeData:
-    """Runtime data stored on the config entry."""
+    """Runtime data stored on the config entry.
+
+    ``panel_device_id`` is the registry id of the panel device, registered at
+    setup so the room devices can name it as their ``via_device_id``.
+    """
 
     client: Local6004Client
     coordinator: InimDataUpdateCoordinator
+    panel_device_id: str
 
 
 type InimConfigEntry = ConfigEntry[InimRuntimeData]
