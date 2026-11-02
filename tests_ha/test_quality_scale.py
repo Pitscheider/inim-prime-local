@@ -1,7 +1,5 @@
 """Quality-scale guardrail tests: parallel-updates, icons, entity translations."""
 
-from __future__ import annotations
-
 import importlib
 import json
 import re

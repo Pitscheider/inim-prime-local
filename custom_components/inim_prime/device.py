@@ -1,7 +1,5 @@
 """Shared helpers for zone label language and per-room device grouping."""
 
-from __future__ import annotations
-
 import unicodedata
 
 from homeassistant.config_entries import ConfigEntry
@@ -85,7 +83,7 @@ def room_device_info(
         identifiers={(DOMAIN, f"{_room_identifier_prefix(entry)}{_room_slug(room)}")},
         name=room,
         manufacturer="INIM",
-        via_device=(DOMAIN, entry.entry_id),
+        via_device_id=entry.runtime_data.panel_device_id,
     )
 
 
@@ -108,4 +106,4 @@ def async_remove_empty_room_devices(hass: HomeAssistant, entry: ConfigEntry) -> 
         if is_room and not er.async_entries_for_device(
             entities, device.id, include_disabled_entities=True
         ):
-            devices.async_update_device(device.id, remove_config_entry_id=entry.entry_id)
+            devices.async_remove_device(device.id)

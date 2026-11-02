@@ -5,8 +5,6 @@ verifies the multi-active scene sensors appear when the integration is set up wi
 the local option enabled. Skipped unless INIM_LOCAL_PASSWORD is set in the env.
 """
 
-from __future__ import annotations
-
 import pytest
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant_custom_component.common import MockConfigEntry

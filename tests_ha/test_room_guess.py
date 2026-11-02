@@ -1,7 +1,5 @@
 """Tests for the multilingual zone-label room guesser."""
 
-from __future__ import annotations
-
 import pytest
 
 from custom_components.inim_prime.room_guess import guess_room

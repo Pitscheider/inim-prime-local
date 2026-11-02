@@ -1,7 +1,5 @@
 """Tests for the INIM Prime config flow (native only: host + LAN password)."""
 
-from __future__ import annotations
-
 from dataclasses import replace
 from unittest.mock import AsyncMock, patch
 

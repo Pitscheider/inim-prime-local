@@ -95,8 +95,6 @@ A firmware whose major digit is not in :data:`_LAYOUTS` is read for its version
 only (``layout_ok=False``) and is not supported.
 """
 
-from __future__ import annotations
-
 import asyncio
 import bisect
 import datetime as dt

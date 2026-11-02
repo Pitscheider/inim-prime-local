@@ -12,8 +12,6 @@ though, so commands and scenarios still see every area (a scenario that also
 sets a hidden area keeps its native path, see commands.py).
 """
 
-from __future__ import annotations
-
 import re
 from collections.abc import Callable, Iterable
 

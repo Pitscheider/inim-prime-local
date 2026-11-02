@@ -1,7 +1,5 @@
 """Unit tests for the TCP 6004 client's reads (no Home Assistant, no socket)."""
 
-from __future__ import annotations
-
 import asyncio
 from dataclasses import replace
 

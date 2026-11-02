@@ -1,7 +1,5 @@
 """Tests for the INIM Prime switch platform."""
 
-from __future__ import annotations
-
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
@@ -84,7 +82,9 @@ def fake_coordinator(outputs, zones):
     return SimpleNamespace(
         data=data,
         client=client,
-        config_entry=SimpleNamespace(entry_id="abc123", title="INIM Prime", options={}),
+        config_entry=SimpleNamespace(
+            entry_id="abc123", title="INIM Prime", options={}, runtime_data=SimpleNamespace(panel_device_id="panel-device")
+        ),
         hass=SimpleNamespace(config=SimpleNamespace(language="en")),
         structure=Local6004Structure(),
         force_arm_on_open=False,

@@ -50,7 +50,9 @@ async def test_declutter_hides_unused_areas_and_outputs(hass, panel_config):
     entry = await _setup(hass, panel_config)
     reg = er.async_get(hass)
     ents = er.async_entries_for_config_entry(reg, entry.entry_id)
-    disabled = lambda e: e.disabled_by is not None
+
+    def disabled(e: er.RegistryEntry) -> bool:
+        return e.disabled_by is not None
 
     panels = [e for e in ents if e.domain == "alarm_control_panel"]
     factory = [

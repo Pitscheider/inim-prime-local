@@ -1,9 +1,9 @@
 # Test-runner image for the INIM Prime HA integration.
 # HA version is a build arg so we can switch versions easily for the pipeline.
-ARG PYTHON_VERSION=3.13
+ARG PYTHON_VERSION=3.14
 FROM python:${PYTHON_VERSION}-slim
 
-ARG HA_VERSION=2026.2.3
+ARG HA_VERSION=2026.10.4
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1 PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app
 

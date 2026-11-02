@@ -1,7 +1,5 @@
 """Tests for the INIM Prime sensor platform."""
 
-from __future__ import annotations
-
 from dataclasses import replace
 from types import SimpleNamespace
 from unittest.mock import AsyncMock

@@ -6,8 +6,6 @@ registry is brought in line with it at setup, and a hidden area stays in the
 coordinator data for commands and scenarios.
 """
 
-from __future__ import annotations
-
 import logging
 from dataclasses import replace
 from unittest.mock import AsyncMock

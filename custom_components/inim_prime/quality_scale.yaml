@@ -4,7 +4,7 @@ rules:
     status: done
     comment: >-
       The inim_prime.arm_forced action is registered once for the domain in
-      async_setup (forced_arm.py / __init__.py), with a voluptuous schema and
+      async_setup (forced_arm.py / __init__.py), with a probatio schema and
       SupportsResponse.OPTIONAL.
   appropriate-polling:
     status: done

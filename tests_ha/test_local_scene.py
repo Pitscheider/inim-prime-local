@@ -1,7 +1,5 @@
 """Tests for the read-only 6004 multi-active-scene integration."""
 
-from __future__ import annotations
-
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 

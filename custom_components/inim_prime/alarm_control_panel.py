@@ -1,7 +1,5 @@
 """Alarm control panel platform for the INIM Prime integration."""
 
-from __future__ import annotations
-
 from typing import Any
 
 from homeassistant.components.alarm_control_panel import AlarmControlPanelEntity

@@ -1,7 +1,5 @@
 """Tests for the native (TCP 6004) static structure driving the entity set."""
 
-from __future__ import annotations
-
 from dataclasses import replace
 from unittest.mock import AsyncMock
 

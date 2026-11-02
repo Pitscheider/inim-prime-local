@@ -1,7 +1,5 @@
 """Tests for the INIM Prime entry setup, migration, unload and diagnostics."""
 
-from __future__ import annotations
-
 import logging
 from dataclasses import replace
 from types import SimpleNamespace
@@ -46,8 +44,8 @@ async def test_setup_loads_and_unload_closes_the_client(
     assert mock_config_entry.runtime_data.client is patch_client
     patch_client.async_read_config.assert_awaited_once()
 
-    device = dr.async_get(hass).async_get_device(
-        identifiers={(DOMAIN, mock_config_entry.entry_id)}
+    device = dr.async_get(hass).async_get_device_by_identifier(
+        (DOMAIN, mock_config_entry.entry_id), mock_config_entry.entry_id
     )
     assert device is not None
     assert (device.manufacturer, device.model, device.sw_version) == ("INIM", "PX020", "4.07")
@@ -73,23 +71,26 @@ async def test_setup_removes_the_room_devices_left_empty(
     )
     devices = dr.async_get(hass)
     entities = er.async_get(hass)
-    room = (DOMAIN, f"{mock_config_entry.entry_id}_room_kitchen")
-    panel = (DOMAIN, mock_config_entry.entry_id)
+    entry_id = mock_config_entry.entry_id
+    room = (DOMAIN, f"{entry_id}_room_kitchen")
+    panel = (DOMAIN, entry_id)
 
     assert await _setup(hass, mock_config_entry)
-    assert devices.async_get_device(identifiers={room}) is not None
+    room_device = devices.async_get_device_by_identifier(room, entry_id)
+    panel_device = devices.async_get_device_by_identifier(panel, entry_id)
+    assert room_device is not None
+    assert panel_device is not None
+    assert room_device.via_device_id == panel_device.id
 
     hass.config_entries.async_update_entry(mock_config_entry, options={CONF_GROUP_BY_ROOM: False})
     assert await hass.config_entries.async_reload(mock_config_entry.entry_id)
     await hass.async_block_till_done()
 
-    assert devices.async_get_device(identifiers={room}) is None
+    assert devices.async_get_device_by_identifier(room, entry_id) is None
     zone_id = entities.async_get_entity_id(
         "binary_sensor", DOMAIN, f"{mock_config_entry.entry_id}_zone_1"
     )
     assert zone_id is not None
-    panel_device = devices.async_get_device(identifiers={panel})
-    assert panel_device is not None
     assert entities.async_get(zone_id).device_id == panel_device.id
 
 
@@ -317,10 +318,14 @@ def test_room_device_info_links_to_the_panel() -> None:
     """A room device gets an accent-folded id and hangs off the panel device."""
     from custom_components.inim_prime.device import room_device_info
 
-    coordinator = SimpleNamespace(config_entry=SimpleNamespace(entry_id="abc"))
+    coordinator = SimpleNamespace(
+        config_entry=SimpleNamespace(
+            entry_id="abc", runtime_data=SimpleNamespace(panel_device_id="panel-device")
+        )
+    )
 
     info = room_device_info(coordinator, "Café  Room")
 
     assert info["identifiers"] == {(DOMAIN, "abc_room_cafe_room")}
     assert info["name"] == "Café  Room"
-    assert info["via_device"] == (DOMAIN, "abc")
+    assert info["via_device_id"] == "panel-device"

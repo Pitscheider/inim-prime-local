@@ -4,13 +4,19 @@ testpaths = ["tests", "tests_ha"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py313"
+target-version = "py314"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]
+select = ["E", "F", "I", "UP", "B", "TID251"]
 ignore = ["E501"]
 
+# As in Home Assistant core: with Python 3.14 annotations are evaluated lazily
+# (PEP 649), so the future import only turns them back into strings.
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"voluptuous".msg = "use probatio instead"
+"__future__.annotations".msg = "It should not be needed because Home Assistant requires Python 3.14+"
+
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.14"
 strict = true
 

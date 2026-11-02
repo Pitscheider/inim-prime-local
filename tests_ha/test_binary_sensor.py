@@ -1,13 +1,11 @@
 """Tests for the INIM Prime binary_sensor platform."""
 
-from __future__ import annotations
-
 from dataclasses import replace
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
 import pytest
-from homeassistant.components.binary_sensor import BinarySensorDeviceClass
+from homeassistant.components.binary_sensor.const import BinarySensorDeviceClass
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
@@ -98,9 +96,15 @@ def coordinator(inim_data: InimData) -> SimpleNamespace:
     """Return a fake coordinator with sample data.
 
     Includes ``hass.config.language`` and ``config_entry.options`` because the
-    zone entity resolves the label-guessing language from them.
+    zone entity resolves the label-guessing language from them, and the panel
+    device id its room device links to.
     """
-    entry = SimpleNamespace(entry_id="abc123", title="INIM Prime", options={})
+    entry = SimpleNamespace(
+        entry_id="abc123",
+        title="INIM Prime",
+        options={},
+        runtime_data=SimpleNamespace(panel_device_id="panel-device"),
+    )
     hass = SimpleNamespace(config=SimpleNamespace(language="it"))
     return SimpleNamespace(
         data=inim_data,
@@ -177,7 +181,7 @@ def test_zone_grouped_into_room_device(coordinator: SimpleNamespace) -> None:
     assert info["identifiers"] == {("inim_prime", "abc123_room_ingresso")}
     assert info["name"] == "Ingresso"
     assert info["manufacturer"] == "INIM"
-    assert info["via_device"] == ("inim_prime", "abc123")
+    assert info["via_device_id"] == "panel-device"
 
 
 def test_zone_grouping_disabled_uses_panel_device(inim_data: InimData) -> None:
