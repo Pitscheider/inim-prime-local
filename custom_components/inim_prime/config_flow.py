@@ -87,7 +87,19 @@ class InimPrimeConfigFlow(ConfigFlow, domain=DOMAIN):
 
             errors = await self._async_validate(host, user_input[CONF_LOCAL_PASSWORD])
             if not errors:
-                return self.async_create_entry(title=user_input[CONF_NAME], data=user_input)
+                # Room grouping is asked here because it shapes the entity IDs,
+                # which Home Assistant fixes when the entities are first made.
+                # It is stored as the option the Settings form edits later.
+                data = {key: value for key, value in user_input.items() if key != CONF_GROUP_BY_ROOM}
+                return self.async_create_entry(
+                    title=user_input[CONF_NAME],
+                    data=data,
+                    options={
+                        CONF_GROUP_BY_ROOM: user_input.get(
+                            CONF_GROUP_BY_ROOM, DEFAULT_GROUP_BY_ROOM
+                        )
+                    },
+                )
 
         return self.async_show_form(
             step_id="user",
@@ -96,6 +108,7 @@ class InimPrimeConfigFlow(ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_NAME, default=DEFAULT_NAME): str,
                     vol.Required(CONF_HOST): str,
                     vol.Required(CONF_LOCAL_PASSWORD, default=DEFAULT_LOCAL_PASSWORD): _PASSWORD,
+                    vol.Required(CONF_GROUP_BY_ROOM, default=DEFAULT_GROUP_BY_ROOM): bool,
                 }
             ),
             errors=errors,
