@@ -13,8 +13,8 @@ from .areas import async_sync_area_registry, async_track_unselected_areas
 from .client import Local6004Client, Local6004Config, Local6004Error
 from .const import (
     CONF_LOCAL_PASSWORD,
-    CONF_WEBHOOK_ENABLED,
     CONF_USE_OUTER_FRAME,
+    CONF_WEBHOOK_ENABLED,
     DOMAIN,
     LEGACY_DATA_KEYS,
     LEGACY_OPTION_KEYS,
