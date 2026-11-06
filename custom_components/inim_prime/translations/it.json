@@ -40,7 +40,7 @@
       }
     },
     "error": {
-      "cannot_connect": "Impossibile leggere la centrale tramite il protocollo locale (TCP 6004). Verifica l'indirizzo, la password LAN e che la centrale sia raggiungibile.",
+      "cannot_connect": "Impossibile leggere la centrale tramite il protocollo locale (TCP 6004). Verifica l'indirizzo, la password LAN e che la centrale sia raggiungibile. Se è collegata tramite scheda PrimeLAN, assicurati che l'opzione \"Collegata tramite scheda PrimeLAN\" sia attiva; se usa la porta LAN integrata, disattivala.",
       "unsupported_firmware": "Questo firmware della centrale non è supportato: la sua mappa di memoria non è nota. Sono supportati i firmware PrimeX/Prime 4.x e 5.00.",
       "unknown": "Errore imprevisto."
     },

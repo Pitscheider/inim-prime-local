@@ -40,7 +40,7 @@
       }
     },
     "error": {
-      "cannot_connect": "Could not read the panel over its local protocol (TCP 6004). Check the address, the LAN password and that the panel is reachable.",
+      "cannot_connect": "Could not read the panel over its local protocol (TCP 6004). Check the address, the LAN password and that the panel is reachable. If the panel is behind a PrimeLAN card, make sure \"Connected through a PrimeLAN card\" is turned on; if it uses the on-board LAN port, turn it off.",
       "unsupported_firmware": "This panel firmware is not supported: its memory map is not known. PrimeX/Prime firmware 4.x and 5.00 are supported.",
       "unknown": "Unexpected error."
     },
