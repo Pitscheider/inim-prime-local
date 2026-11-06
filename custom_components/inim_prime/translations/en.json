@@ -7,11 +7,13 @@
         "data": {
           "name": "Name",
           "host": "Host",
-          "local_6004_password": "Panel LAN password"
+          "local_6004_password": "Panel LAN password",
+          "use_outer_frame": "Connected through a PrimeLAN card"
         },
         "data_description": {
           "name": "Friendly name for this panel — used for the device and entity names (e.g. \"Allarme\").",
-          "local_6004_password": "The panel's LAN/programming password (default 'pass'). Home Assistant talks to the panel only over its local protocol (TCP 6004); PrimeX/Prime firmware 4.x and 5.00 are supported."
+          "local_6004_password": "The panel's LAN/programming password (default 'pass'). Home Assistant talks to the panel only over its local protocol (TCP 6004); PrimeX/Prime firmware 4.x and 5.00 are supported.",
+          "use_outer_frame": "Turn on if the panel is reached through a PrimeLAN network card instead of its on-board LAN port. The PrimeLAN wraps every native frame in an extra header."
         }
       },
       "reauth_confirm": {
@@ -27,11 +29,13 @@
         "data": {
           "name": "Name",
           "host": "Host",
-          "local_6004_password": "Panel LAN password"
+          "local_6004_password": "Panel LAN password",
+          "use_outer_frame": "Connected through a PrimeLAN card"
         },
         "data_description": {
           "name": "Friendly name for this panel — used for the device and entity names (e.g. \"Allarme\").",
-          "local_6004_password": "The panel's LAN/programming password (default 'pass'). Home Assistant talks to the panel only over its local protocol (TCP 6004); PrimeX/Prime firmware 4.x and 5.00 are supported."
+          "local_6004_password": "The panel's LAN/programming password (default 'pass'). Home Assistant talks to the panel only over its local protocol (TCP 6004); PrimeX/Prime firmware 4.x and 5.00 are supported.",
+          "use_outer_frame": "Turn on if the panel is reached through a PrimeLAN network card instead of its on-board LAN port. The PrimeLAN wraps every native frame in an extra header."
         }
       }
     },

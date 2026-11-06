@@ -7,11 +7,13 @@
         "data": {
           "name": "Nome",
           "host": "Host",
-          "local_6004_password": "Password LAN della centrale"
+          "local_6004_password": "Password LAN della centrale",
+          "use_outer_frame": "Collegata tramite scheda PrimeLAN"
         },
         "data_description": {
           "name": "Nome dell'impianto — usato per il device e i nomi delle entità (es. \"Allarme\").",
-          "local_6004_password": "La password LAN/di programmazione della centrale (default 'pass'). Home Assistant comunica con la centrale solo tramite il suo protocollo locale (TCP 6004); sono supportati i firmware PrimeX/Prime 4.x e 5.00."
+          "local_6004_password": "La password LAN/di programmazione della centrale (default 'pass'). Home Assistant comunica con la centrale solo tramite il suo protocollo locale (TCP 6004); sono supportati i firmware PrimeX/Prime 4.x e 5.00.",
+          "use_outer_frame": "Attiva se la centrale è raggiunta tramite la scheda di rete PrimeLAN invece della porta LAN integrata. La PrimeLAN incapsula ogni frame nativo in un'intestazione aggiuntiva."
         }
       },
       "reauth_confirm": {
@@ -27,11 +29,13 @@
         "data": {
           "name": "Nome",
           "host": "Host",
-          "local_6004_password": "Password LAN della centrale"
+          "local_6004_password": "Password LAN della centrale",
+          "use_outer_frame": "Collegata tramite scheda PrimeLAN"
         },
         "data_description": {
           "name": "Nome dell'impianto — usato per il device e i nomi delle entità (es. \"Allarme\").",
-          "local_6004_password": "La password LAN/di programmazione della centrale (default 'pass'). Home Assistant comunica con la centrale solo tramite il suo protocollo locale (TCP 6004); sono supportati i firmware PrimeX/Prime 4.x e 5.00."
+          "local_6004_password": "La password LAN/di programmazione della centrale (default 'pass'). Home Assistant comunica con la centrale solo tramite il suo protocollo locale (TCP 6004); sono supportati i firmware PrimeX/Prime 4.x e 5.00.",
+          "use_outer_frame": "Attiva se la centrale è raggiunta tramite la scheda di rete PrimeLAN invece della porta LAN integrata. La PrimeLAN incapsula ogni frame nativo in un'intestazione aggiuntiva."
         }
       }
     },
