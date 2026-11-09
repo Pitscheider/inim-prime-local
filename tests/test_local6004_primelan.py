@@ -1,7 +1,5 @@
 """Unit tests for the PrimeLAN outer frame (fake streams only, never a panel)."""
 
-from __future__ import annotations
-
 import pytest
 
 from custom_components.inim_prime.client import local6004 as m
