@@ -1,7 +1,5 @@
 """Tests for the INIM Prime alarm_control_panel platform."""
 
-from __future__ import annotations
-
 from unittest.mock import AsyncMock
 
 import pytest

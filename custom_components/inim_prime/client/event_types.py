@@ -8,8 +8,6 @@ A class spanning several codes names one object: ``code - start`` is its
 0-based index, of the kind ``EVENT_OBJECT_KINDS[class kind byte - 1]``.
 """
 
-from __future__ import annotations
-
 EVENT_TYPE_NAMES: tuple[str, ...] = (
     "Zone alarm",
     "Terminal tamper",

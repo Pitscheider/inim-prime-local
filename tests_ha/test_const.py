@@ -1,7 +1,5 @@
 """Tests for INIM Prime const helpers."""
 
-from __future__ import annotations
-
 import pytest
 
 from custom_components.inim_prime.const import is_factory_default_area

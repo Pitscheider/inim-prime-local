@@ -8,12 +8,14 @@
           "name": "Nome",
           "host": "Host",
           "local_6004_password": "Password LAN della centrale",
-          "use_outer_frame": "Collegata tramite scheda PrimeLAN"
+          "use_outer_frame": "Collegata tramite scheda PrimeLAN",
+          "group_by_room": "Raggruppa le zone per stanza"
         },
         "data_description": {
           "name": "Nome dell'impianto — usato per il device e i nomi delle entità (es. \"Allarme\").",
           "local_6004_password": "La password LAN/di programmazione della centrale (default 'pass'). Home Assistant comunica con la centrale solo tramite il suo protocollo locale (TCP 6004); sono supportati i firmware PrimeX/Prime 4.x e 5.00.",
-          "use_outer_frame": "Attiva se la centrale è raggiunta tramite la scheda di rete PrimeLAN invece della porta LAN integrata. La PrimeLAN incapsula ogni frame nativo in un'intestazione aggiuntiva."
+          "use_outer_frame": "Attiva se la centrale è raggiunta tramite la scheda di rete PrimeLAN invece della porta LAN integrata. La PrimeLAN incapsula ogni frame nativo in un'intestazione aggiuntiva.",
+          "group_by_room": "Mette ogni zona (e il suo switch di bypass) sotto un device con il nome della stanza dedotta dal nome della zona, così assegni intere stanze alle aree. Gli ID delle entità prendono il nome del device quando vengono creati: disattivalo ora se vuoi che inizino tutti con il nome della centrale. Puoi cambiarlo più avanti nelle Impostazioni."
         }
       },
       "reauth_confirm": {

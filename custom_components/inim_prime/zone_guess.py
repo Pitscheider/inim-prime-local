@@ -8,12 +8,10 @@ from a verified multilingual word list; users can always override the device
 class on the entity in Home Assistant.
 """
 
-from __future__ import annotations
-
 import re
 import unicodedata
 
-from homeassistant.components.binary_sensor import BinarySensorDeviceClass
+from homeassistant.components.binary_sensor.const import BinarySensorDeviceClass
 
 # Languages with a dedicated vocabulary (ISO-639-1). Anything else falls back to
 # English (which is always merged in regardless).

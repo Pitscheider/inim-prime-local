@@ -1,11 +1,9 @@
 """Config flow for the INIM Prime integration (native TCP 6004 only)."""
 
-from __future__ import annotations
-
 import uuid
 from typing import Any
 
-import voluptuous as vol
+import probatio
 from homeassistant.components import webhook
 from homeassistant.components.persistent_notification import (
     async_create as async_create_notification,
@@ -97,16 +95,29 @@ class InimPrimeConfigFlow(ConfigFlow, domain=DOMAIN):
                 host, user_input[CONF_LOCAL_PASSWORD], user_input[CONF_USE_OUTER_FRAME]
             )
             if not errors:
-                return self.async_create_entry(title=user_input[CONF_NAME], data=user_input)
+                # Room grouping is asked here because it shapes the entity IDs,
+                # which Home Assistant fixes when the entities are first made.
+                # It is stored as the option the Settings form edits later.
+                data = {key: value for key, value in user_input.items() if key != CONF_GROUP_BY_ROOM}
+                return self.async_create_entry(
+                    title=user_input[CONF_NAME],
+                    data=data,
+                    options={
+                        CONF_GROUP_BY_ROOM: user_input.get(
+                            CONF_GROUP_BY_ROOM, DEFAULT_GROUP_BY_ROOM
+                        )
+                    },
+                )
 
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema(
+            data_schema=probatio.Schema(
                 {
-                    vol.Required(CONF_NAME, default=DEFAULT_NAME): str,
-                    vol.Required(CONF_HOST): str,
-                    vol.Required(CONF_LOCAL_PASSWORD, default=DEFAULT_LOCAL_PASSWORD): _PASSWORD,
-                    vol.Required(CONF_USE_OUTER_FRAME, default=False): bool,
+                    probatio.Required(CONF_NAME, default=DEFAULT_NAME): str,
+                    probatio.Required(CONF_HOST): str,
+                    probatio.Required(CONF_LOCAL_PASSWORD, default=DEFAULT_LOCAL_PASSWORD): _PASSWORD,
+                    probatio.Required(CONF_USE_OUTER_FRAME, default=False): bool,
+                    probatio.Required(CONF_GROUP_BY_ROOM, default=DEFAULT_GROUP_BY_ROOM): bool,
                 }
             ),
             errors=errors,
@@ -139,7 +150,7 @@ class InimPrimeConfigFlow(ConfigFlow, domain=DOMAIN):
 
         return self.async_show_form(
             step_id="reauth_confirm",
-            data_schema=vol.Schema({vol.Required(CONF_LOCAL_PASSWORD): _PASSWORD}),
+            data_schema=probatio.Schema({probatio.Required(CONF_LOCAL_PASSWORD): _PASSWORD}),
             description_placeholders={CONF_HOST: entry.data[CONF_HOST]},
             errors=errors,
         )
@@ -175,15 +186,15 @@ class InimPrimeConfigFlow(ConfigFlow, domain=DOMAIN):
         suggested = {**entry.data, **(user_input or {})}
         return self.async_show_form(
             step_id="reconfigure",
-            data_schema=vol.Schema(
+            data_schema=probatio.Schema(
                 {
-                    vol.Required(CONF_NAME, default=suggested.get(CONF_NAME, entry.title)): str,
-                    vol.Required(CONF_HOST, default=suggested.get(CONF_HOST)): str,
-                    vol.Required(
+                    probatio.Required(CONF_NAME, default=suggested.get(CONF_NAME, entry.title)): str,
+                    probatio.Required(CONF_HOST, default=suggested.get(CONF_HOST)): str,
+                    probatio.Required(
                         CONF_LOCAL_PASSWORD,
                         default=suggested.get(CONF_LOCAL_PASSWORD, DEFAULT_LOCAL_PASSWORD),
                     ): _PASSWORD,
-                    vol.Required(
+                    probatio.Required(
                         CONF_USE_OUTER_FRAME,
                         default=suggested.get(CONF_USE_OUTER_FRAME, False),
                     ): bool,
@@ -254,7 +265,7 @@ class InimPrimeOptionsFlow(OptionsFlowWithReload):
 
             return self.async_create_entry(data=new_options)
 
-        schema: dict[vol.Marker, Any] = {}
+        schema: dict[probatio.Marker, Any] = {}
         if areas:
             # Offered only while the entry is loaded: the area list comes from
             # the running coordinator. Ids not on the panel any more are dropped.
@@ -263,7 +274,7 @@ class InimPrimeOptionsFlow(OptionsFlowWithReload):
                 CONF_AREAS, default_area_selection(self.hass, self.config_entry, areas)
             )
             schema[
-                vol.Optional(CONF_AREAS, default=[key for key in selected if key in offered])
+                probatio.Optional(CONF_AREAS, default=[key for key in selected if key in offered])
             ] = SelectSelector(
                 SelectSelectorConfig(
                     options=[
@@ -280,14 +291,14 @@ class InimPrimeOptionsFlow(OptionsFlowWithReload):
 
         return self.async_show_form(
             step_id="settings",
-            data_schema=vol.Schema(
+            data_schema=probatio.Schema(
                 {
                     **schema,
-                    vol.Required(
+                    probatio.Required(
                         CONF_WEBHOOK_ENABLED,
                         default=options.get(CONF_WEBHOOK_ENABLED, False),
                     ): bool,
-                    vol.Required(
+                    probatio.Required(
                         CONF_LABEL_LANGUAGE,
                         default=options.get(CONF_LABEL_LANGUAGE, LABEL_LANGUAGE_AUTO),
                     ): SelectSelector(
@@ -297,11 +308,11 @@ class InimPrimeOptionsFlow(OptionsFlowWithReload):
                             mode=SelectSelectorMode.DROPDOWN,
                         )
                     ),
-                    vol.Required(
+                    probatio.Required(
                         CONF_GROUP_BY_ROOM,
                         default=options.get(CONF_GROUP_BY_ROOM, DEFAULT_GROUP_BY_ROOM),
                     ): bool,
-                    vol.Required(
+                    probatio.Required(
                         CONF_REQUIRE_CODE,
                         default=options.get(CONF_REQUIRE_CODE, DEFAULT_REQUIRE_CODE),
                     ): bool,
@@ -357,10 +368,10 @@ class InimPrimeOptionsFlow(OptionsFlowWithReload):
             return self._save_panels(panels)
         return self.async_show_form(
             step_id="panel_add_areas",
-            data_schema=vol.Schema(
+            data_schema=probatio.Schema(
                 {
-                    vol.Required("name"): str,
-                    vol.Required("areas"): SelectSelector(
+                    probatio.Required("name"): str,
+                    probatio.Required("areas"): SelectSelector(
                         SelectSelectorConfig(
                             options=[
                                 SelectOptionDict(
@@ -407,11 +418,11 @@ class InimPrimeOptionsFlow(OptionsFlowWithReload):
         )
         return self.async_show_form(
             step_id="panel_add_scenarios",
-            data_schema=vol.Schema(
+            data_schema=probatio.Schema(
                 {
-                    vol.Required("name"): str,
-                    vol.Required("arm_scenario"): selector,
-                    vol.Required("disarm_scenario"): selector,
+                    probatio.Required("name"): str,
+                    probatio.Required("arm_scenario"): selector,
+                    probatio.Required("disarm_scenario"): selector,
                 }
             ),
         )
@@ -449,9 +460,9 @@ class InimPrimeOptionsFlow(OptionsFlowWithReload):
         ]
         return self.async_show_form(
             step_id="panel_add_inverse",
-            data_schema=vol.Schema(
+            data_schema=probatio.Schema(
                 {
-                    vol.Required("pairs"): SelectSelector(
+                    probatio.Required("pairs"): SelectSelector(
                         SelectSelectorConfig(
                             options=choices, multiple=True, mode=SelectSelectorMode.LIST
                         )
@@ -474,9 +485,9 @@ class InimPrimeOptionsFlow(OptionsFlowWithReload):
             return await self.async_step_panel_edit_form()
         return self.async_show_form(
             step_id="panel_edit",
-            data_schema=vol.Schema(
+            data_schema=probatio.Schema(
                 {
-                    vol.Required("panel"): SelectSelector(
+                    probatio.Required("panel"): SelectSelector(
                         SelectSelectorConfig(
                             options=[
                                 SelectOptionDict(value=p.id, label=p.name) for p in panels
@@ -512,12 +523,12 @@ class InimPrimeOptionsFlow(OptionsFlowWithReload):
                 )
             return self._save_panels([updated if p.id == panel.id else p for p in panels])
 
-        schema: dict[vol.Marker, Any] = {vol.Required("name", default=panel.name): str}
+        schema: dict[probatio.Marker, Any] = {probatio.Required("name", default=panel.name): str}
         if panel.kind is PanelKind.AREAS:
             areas = _panel_areas(self.config_entry)
             offered = {str(area.id) for area in areas}
             schema[
-                vol.Required("areas", default=[str(a) for a in panel.areas if str(a) in offered])
+                probatio.Required("areas", default=[str(a) for a in panel.areas if str(a) in offered])
             ] = SelectSelector(
                 SelectSelectorConfig(
                     options=[
@@ -539,10 +550,10 @@ class InimPrimeOptionsFlow(OptionsFlowWithReload):
             selector = SelectSelector(
                 SelectSelectorConfig(options=choices, mode=SelectSelectorMode.DROPDOWN)
             )
-            schema[vol.Required("arm_scenario", default=str(panel.arm_scenario))] = selector
-            schema[vol.Required("disarm_scenario", default=str(panel.disarm_scenario))] = selector
+            schema[probatio.Required("arm_scenario", default=str(panel.arm_scenario))] = selector
+            schema[probatio.Required("disarm_scenario", default=str(panel.disarm_scenario))] = selector
 
-        return self.async_show_form(step_id="panel_edit_form", data_schema=vol.Schema(schema))
+        return self.async_show_form(step_id="panel_edit_form", data_schema=probatio.Schema(schema))
 
     async def async_step_panel_remove(
         self, user_input: dict[str, Any] | None = None
@@ -558,9 +569,9 @@ class InimPrimeOptionsFlow(OptionsFlowWithReload):
             return self._save_panels([p for p in panels if p.id not in remove])
         return self.async_show_form(
             step_id="panel_remove",
-            data_schema=vol.Schema(
+            data_schema=probatio.Schema(
                 {
-                    vol.Required("remove"): SelectSelector(
+                    probatio.Required("remove"): SelectSelector(
                         SelectSelectorConfig(
                             options=[
                                 SelectOptionDict(value=p.id, label=p.name) for p in panels

@@ -1,7 +1,5 @@
 """Tests for the inim_prime.arm_forced action (forced arming, native only)."""
 
-from __future__ import annotations
-
 from dataclasses import replace
 from unittest.mock import AsyncMock
 

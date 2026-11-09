@@ -1,7 +1,5 @@
 """Tests for the INIM Prime coordinator (native TCP 6004 only)."""
 
-from __future__ import annotations
-
 import asyncio
 from dataclasses import replace
 from datetime import timedelta

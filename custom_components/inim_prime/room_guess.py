@@ -7,8 +7,6 @@ label; when several rooms match, the room with the LONGEST matching token wins
 canonical room display name, or None when no room is recognised.
 """
 
-from __future__ import annotations
-
 from .zone_guess import _fold, normalize_language
 
 _ROOMS: dict[str, dict[str, tuple[str, ...]]] = {

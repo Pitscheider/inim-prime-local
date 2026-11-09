@@ -6,7 +6,7 @@
 #   docker compose run --rm e2e          # live end-to-end against the real panel (needs INIM_* env)
 #   docker compose up homeassistant      # real HA server with the integration mounted (interactive E2E)
 #
-# Switch HA versions:  HA_VERSION=2025.12.0 docker compose build
+# Switch HA versions:  HA_VERSION=2026.9.0 docker compose build
 # Panel creds come from the repo .env (gitignored): INIM_HOST, INIM_LOCAL_PASSWORD
 
 x-test-build: &test-build
@@ -14,8 +14,8 @@ x-test-build: &test-build
     context: .
     dockerfile: docker/Dockerfile.tests
     args:
-      PYTHON_VERSION: ${PYTHON_VERSION:-3.13}
-      HA_VERSION: ${HA_VERSION:-2026.2.3}
+      PYTHON_VERSION: ${PYTHON_VERSION:-3.14}
+      HA_VERSION: ${HA_VERSION:-2026.10.4}
   volumes:
     - ./:/app
   working_dir: /app

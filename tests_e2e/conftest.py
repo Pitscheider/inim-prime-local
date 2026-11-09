@@ -5,8 +5,6 @@ the panel. Reads connection details from environment (docker compose passes .env
 INIM_HOST and INIM_LOCAL_PASSWORD (the panel LAN password, default 'pass').
 """
 
-from __future__ import annotations
-
 import os
 import sys
 from pathlib import Path

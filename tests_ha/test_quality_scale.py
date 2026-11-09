@@ -1,7 +1,5 @@
 """Quality-scale guardrail tests: parallel-updates, icons, entity translations."""
 
-from __future__ import annotations
-
 import importlib
 import json
 import re
@@ -108,12 +106,26 @@ _EXPECTED_CONFIG_ERRORS = {"cannot_connect", "unsupported_firmware", "unknown"}
 
 @pytest.mark.parametrize("name", ["strings.json", "translations/en.json", "translations/it.json"])
 def test_config_translations_are_native_only(name: str) -> None:
-    """The config steps ask only for the name, host and LAN password."""
+    """The config steps ask for the name, host and LAN password.
+
+    Setup also asks for room grouping, which shapes the entity IDs.
+    """
     config = _load(name)["config"]
     assert set(config["error"]) == _EXPECTED_CONFIG_ERRORS
     steps = config["step"]
-    assert set(steps["user"]["data"]) == {"name", "host", "local_6004_password", "use_outer_frame"}
-    assert set(steps["reconfigure"]["data"]) == {"name", "host", "local_6004_password", "use_outer_frame"}
+    assert set(steps["user"]["data"]) == {
+        "name",
+        "host",
+        "local_6004_password",
+        "use_outer_frame",
+        "group_by_room",
+    }
+    assert set(steps["reconfigure"]["data"]) == {
+        "name",
+        "host",
+        "local_6004_password",
+        "use_outer_frame",
+    }
     assert set(steps["reauth_confirm"]["data"]) == {"local_6004_password"}
     # Options start as a menu (settings / panels); the settings form holds the
     # per-entry options.

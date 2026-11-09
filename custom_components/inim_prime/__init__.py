@@ -1,11 +1,10 @@
 """The INIM Prime integration."""
 
-from __future__ import annotations
-
 from homeassistant.const import CONF_HOST
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryError, ConfigEntryNotReady
 from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.typing import ConfigType
 
@@ -27,6 +26,7 @@ from .coordinator import (
     InimDataUpdateCoordinator,
     InimRuntimeData,
 )
+from .device import async_remove_empty_room_devices, panel_device_info
 from .event_log import async_register_event_log_service
 from .forced_arm import async_register_services
 from .webhook import async_register_webhook, async_unregister_webhook
@@ -64,7 +64,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: InimConfigEntry) -> bool
 
     coordinator = InimDataUpdateCoordinator(hass, entry, client, config)
     await coordinator.async_config_entry_first_refresh()
-    entry.runtime_data = InimRuntimeData(client=client, coordinator=coordinator)
+    # Register the panel device before any entity, so the room devices can
+    # link to it by id.
+    panel_device = dr.async_get(hass).async_get_or_create(
+        config_entry_id=entry.entry_id, **panel_device_info(coordinator)
+    )
+    entry.runtime_data = InimRuntimeData(
+        client=client, coordinator=coordinator, panel_device_id=panel_device.id
+    )
 
     if entry.options.get(CONF_WEBHOOK_ENABLED):
         async_register_webhook(hass, entry)
@@ -77,6 +84,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: InimConfigEntry) -> bool
     _async_remove_legacy_entities(hass, entry)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    # Every entity now sits on its device, so a room device left without any
+    # (grouping turned off, a zone renamed) can go.
+    async_remove_empty_room_devices(hass, entry)
     return True
 
 

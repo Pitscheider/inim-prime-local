@@ -23,8 +23,6 @@ when all are disarmed, ``armed_<mode>`` when all share one armed mode, and
 armed and some not), with the armed/disarmed members listed as attributes.
 """
 
-from __future__ import annotations
-
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from enum import StrEnum

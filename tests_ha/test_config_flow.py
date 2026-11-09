@@ -1,7 +1,5 @@
 """Tests for the INIM Prime config flow (native only: host + LAN password)."""
 
-from __future__ import annotations
-
 from dataclasses import replace
 from unittest.mock import AsyncMock, patch
 
@@ -48,7 +46,13 @@ async def _user_flow(hass: HomeAssistant, user_input: dict = USER_INPUT):
 async def test_user_flow_success(hass: HomeAssistant, patch_client: AsyncMock) -> None:
     """A readable panel creates an entry named after the friendly name."""
     result = await hass.config_entries.flow.async_init(DOMAIN, context={"source": SOURCE_USER})
-    assert set(result["data_schema"].schema) == {CONF_NAME, CONF_HOST, CONF_LOCAL_PASSWORD, CONF_USE_OUTER_FRAME}
+    assert set(result["data_schema"].schema) == {
+        CONF_NAME,
+        CONF_HOST,
+        CONF_LOCAL_PASSWORD,
+        CONF_USE_OUTER_FRAME,
+        CONF_GROUP_BY_ROOM,
+    }
 
     result = await hass.config_entries.flow.async_configure(result["flow_id"], USER_INPUT)
     await hass.async_block_till_done()
@@ -56,9 +60,26 @@ async def test_user_flow_success(hass: HomeAssistant, patch_client: AsyncMock) -
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert result["title"] == "Panel"
     assert result["data"] == USER_INPUT
+    assert result["result"].options == {CONF_GROUP_BY_ROOM: True}
     assert result["result"].unique_id == "192.0.2.10"
     assert result["result"].version == 2
     patch_client.async_read_config.assert_awaited()
+
+
+async def test_user_flow_without_room_grouping(
+    hass: HomeAssistant, patch_client: AsyncMock
+) -> None:
+    """Room grouping can be turned off at setup, before any entity ID is made.
+
+    The choice is stored as the option the Settings form edits later, not as
+    connection data.
+    """
+    result = await _user_flow(hass, {**USER_INPUT, CONF_GROUP_BY_ROOM: False})
+    await hass.async_block_till_done()
+
+    assert result["type"] is FlowResultType.CREATE_ENTRY
+    assert result["data"] == USER_INPUT
+    assert result["result"].options == {CONF_GROUP_BY_ROOM: False}
 
 
 @pytest.mark.parametrize(

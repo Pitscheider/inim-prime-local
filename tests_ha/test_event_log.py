@@ -1,7 +1,5 @@
 """Tests for the inim_prime.get_event_log action (read-only event log)."""
 
-from __future__ import annotations
-
 from unittest.mock import AsyncMock
 
 import pytest

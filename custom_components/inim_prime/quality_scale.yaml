@@ -4,7 +4,7 @@ rules:
     status: done
     comment: >-
       The inim_prime.arm_forced action is registered once for the domain in
-      async_setup (forced_arm.py / __init__.py), with a voluptuous schema and
+      async_setup (forced_arm.py / __init__.py), with a probatio schema and
       SupportsResponse.OPTIONAL.
   appropriate-polling:
     status: done
@@ -142,8 +142,11 @@ rules:
       No recurring user-actionable misconfiguration beyond authentication,
       which is handled by the reauthentication flow.
   stale-devices:
-    status: exempt
-    comment: 'Single hub device, removed with the config entry.'
+    status: done
+    comment: >-
+      The panel device goes with the config entry. Each setup removes the
+      per-room devices no entity uses any more (room grouping turned off, a
+      zone renamed): device.async_remove_empty_room_devices.
 
   # Platinum
   async-dependency:

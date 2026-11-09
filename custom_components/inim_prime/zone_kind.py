@@ -11,9 +11,7 @@ nothing: a fault or hold-up zone reads as problem or safety, a 24-hour zone as
 tamper, an interior zone as motion, a delayed or chime zone as a door.
 """
 
-from __future__ import annotations
-
-from homeassistant.components.binary_sensor import BinarySensorDeviceClass
+from homeassistant.components.binary_sensor.const import BinarySensorDeviceClass
 
 from .client import NativeZoneDef
 from .coordinator import InimDataUpdateCoordinator

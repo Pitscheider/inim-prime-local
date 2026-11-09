@@ -1,9 +1,11 @@
 """Shared helpers for zone label language and per-room device grouping."""
 
-from __future__ import annotations
-
 import unicodedata
 
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.device_registry import DeviceInfo
 
 from .const import (
@@ -67,14 +69,41 @@ def _room_slug(room: str) -> str:
     return "_".join(folded.split())
 
 
+def _room_identifier_prefix(entry: ConfigEntry) -> str:
+    """The start of every room device identifier of an entry."""
+    return f"{entry.entry_id}_room_"
+
+
 def room_device_info(
     coordinator: InimDataUpdateCoordinator, room: str
 ) -> DeviceInfo:
     """Build the DeviceInfo for a per-room sub-device linked to the panel."""
     entry = coordinator.config_entry
     return DeviceInfo(
-        identifiers={(DOMAIN, f"{entry.entry_id}_room_{_room_slug(room)}")},
+        identifiers={(DOMAIN, f"{_room_identifier_prefix(entry)}{_room_slug(room)}")},
         name=room,
         manufacturer="INIM",
-        via_device=(DOMAIN, entry.entry_id),
+        via_device_id=entry.runtime_data.panel_device_id,
     )
+
+
+@callback
+def async_remove_empty_room_devices(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Remove the room devices of an entry that no entity uses any more.
+
+    That happens when room grouping is turned off, or when a zone renamed on
+    the panel no longer names its room. Run it after the platforms have added
+    their entities. Disabled entities still count, so their room stays.
+    """
+    devices = dr.async_get(hass)
+    entities = er.async_get(hass)
+    prefix = _room_identifier_prefix(entry)
+    for device in dr.async_entries_for_config_entry(devices, entry.entry_id):
+        is_room = any(
+            domain == DOMAIN and identifier.startswith(prefix)
+            for domain, identifier in device.identifiers
+        )
+        if is_room and not er.async_entries_for_device(
+            entities, device.id, include_disabled_entities=True
+        ):
+            devices.async_remove_device(device.id)

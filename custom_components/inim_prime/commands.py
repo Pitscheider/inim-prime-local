@@ -21,8 +21,6 @@ Scenarios are sent as one op 3 when every target maps to one mode and the
 panel has no partition beyond the decoded scene range (0-11).
 """
 
-from __future__ import annotations
-
 import asyncio
 from collections.abc import Awaitable, Callable, Iterable
 
